@@ -1,0 +1,30 @@
+<html>
+  <body>
+    <script>
+      // miniapp -> web-view
+      const match = /(__miniprogram_tunnel_message__r\d+)=([^&]*)/.exec(window.location.search);
+      if (match) {
+        localStorage.setItem(match[1], decodeURIComponent(match[2]));
+      }
+
+      // web-view -> miniapp
+      window.onstorage = (e) => {
+        const matchKey = /__miniprogram_tunnel_message__s([.0-9]+)/.exec(e.key);
+        if (matchKey) {
+          if (e.newValue) {
+            try {
+              window.history.replaceState(
+                null,
+                null,
+                location.pathname + '?' + e.key + '=' + encodeURIComponent(e.newValue)
+              );
+              window.location.reload();
+            } catch (err) {
+              console.err('web-view parse message error: ', err.message);
+            }
+          }
+        }
+      };
+    </script>
+  </body>
+</html>

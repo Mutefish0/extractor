@@ -1,0 +1,1 @@
+<web-view src="{{origin + '/'}}" bindload="bindWebviewLoad"></web-view>
